@@ -12,8 +12,8 @@ using TodoList_API.Data;
 namespace TodoList_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241208075444_initial migration")]
-    partial class initialmigration
+    [Migration("20241219130049_Initial-Migration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,6 +73,7 @@ namespace TodoList_API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
@@ -85,9 +86,6 @@ namespace TodoList_API.Migrations
 
                     b.Property<bool>("isActive")
                         .HasColumnType("bit");
-
-                    b.Property<string>("salt")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

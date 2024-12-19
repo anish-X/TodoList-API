@@ -17,6 +17,7 @@ namespace TodoList_API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> GetAll()
         {
             var users = await _userService.GetAllAsync();
@@ -31,8 +32,11 @@ namespace TodoList_API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "Admin")]
+
         public async Task<IActionResult> CreateUserAsync([FromBody] UserDto userDto)
         {
+            
             await _userService.CreateUserAsync(userDto);
             return Ok(userDto);
         }

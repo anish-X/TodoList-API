@@ -2,6 +2,7 @@
 using TodoList_API.Models;
 using TodoList_API.Repositories.Interface;
 using TodoList_API.DTOs;
+using Org.BouncyCastle.Security;
 
 namespace TodoList_API.Services
 {
@@ -27,13 +28,16 @@ namespace TodoList_API.Services
 
         public async Task<User> CreateUserAsync(UserDto userDto)
         {
+
+            var HashPassword = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
+            
             var user = new User
             {
-                Id = userDto.Id,
                 Name = userDto.Name,
                 Email = userDto.Email,
                 Username = userDto.Username,
-                Role = userDto.Role ?? "User",             
+                Password = HashPassword,
+                Role = userDto.Role             
             };
 
             return await _userRepository.CreateAsync(user);

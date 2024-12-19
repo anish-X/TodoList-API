@@ -25,9 +25,18 @@ namespace TodoList_API.Repositories
 
         public async Task<User> CreateAsync(User user)
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return user;
+            try
+            {
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+                return user;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error while saving user: {ex.Message}");
+                throw;
+            }
+            
         }
 
         public async Task<User> UpdateByUsernameAsync(string username)

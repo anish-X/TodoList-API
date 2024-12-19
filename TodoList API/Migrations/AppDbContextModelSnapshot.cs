@@ -70,6 +70,7 @@ namespace TodoList_API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
@@ -82,9 +83,6 @@ namespace TodoList_API.Migrations
 
                     b.Property<bool>("isActive")
                         .HasColumnType("bit");
-
-                    b.Property<string>("salt")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
