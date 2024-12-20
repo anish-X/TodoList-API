@@ -10,5 +10,6 @@ namespace TodoList_API.Services.Interface
         Task<User> CreateUserAsync(UserDto userDto);
         Task<User> UpdateUserAsync(string username, UserDto userDto);
         Task<bool> DeleteUserAsync(string username);
+        Task<List<UserDto>> GetUserTodoAsync();
     }
 }

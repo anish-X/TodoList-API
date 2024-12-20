@@ -12,7 +12,7 @@ using TodoList_API.Data;
 namespace TodoList_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241219130049_Initial-Migration")]
+    [Migration("20241219192014_Initial-Migration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -42,15 +42,15 @@ namespace TodoList_API.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("isCompleted")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Username");
+                    b.HasIndex("UserId");
 
                     b.ToTable("TodoItems");
                 });
@@ -81,16 +81,12 @@ namespace TodoList_API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isActive")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Username")
-                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -99,9 +95,9 @@ namespace TodoList_API.Migrations
                 {
                     b.HasOne("TodoList_API.Models.User", "User")
                         .WithMany("TodoItems")
-                        .HasForeignKey("Username")
-                        .HasPrincipalKey("Username")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

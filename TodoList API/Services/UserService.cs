@@ -37,11 +37,19 @@ namespace TodoList_API.Services
                 Email = userDto.Email,
                 Username = userDto.Username,
                 Password = HashPassword,
-                Role = userDto.Role             
+                Role = userDto.Role
+                //TodoItems = userDto.TodoItemDtos?.Select(t => new TodoItem
+                //{
+                //    Title = t.Title,
+                //    Description = t.Description,
+                //    isCompleted = t.IsCompleted
+                //}).ToList() ?? new List<TodoItem>()
             };
-
             return await _userRepository.CreateAsync(user);
+
         }
+
+        
 
         public async Task<User> UpdateUserAsync(string username, UserDto userDto)
         {
@@ -70,6 +78,26 @@ namespace TodoList_API.Services
             }
             else { return true; }
         }
+
+        public async Task<List<UserDto>> GetUserTodoAsync()
+        {
+            var users = await _userRepository.GetUserTodoAsync();
+
+            return users.Select(u => new UserDto
+            {
+                Name = u.Name,
+                Email = u.Email,
+                Role = u.Role,
+                Username = u.Username,
+                TodoItemDtos = u.TodoItems.Select(t => new TodoItemDto
+                {
+                    Title = t.Title,
+                    Description = t.Description,
+                    IsCompleted = t.isCompleted
+                }).ToList()
+            }).ToList();
+        }
+
         
     }
 }

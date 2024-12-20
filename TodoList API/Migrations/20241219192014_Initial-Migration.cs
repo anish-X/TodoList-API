@@ -18,7 +18,7 @@ namespace TodoList_API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -28,7 +28,6 @@ namespace TodoList_API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                    table.UniqueConstraint("AK_Users_Username", x => x.Username);
                 });
 
             migrationBuilder.CreateTable(
@@ -41,29 +40,23 @@ namespace TodoList_API.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     isCompleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Username = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TodoItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TodoItems_Users_Username",
-                        column: x => x.Username,
+                        name: "FK_TodoItems_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Username",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_TodoItems_Username",
+                name: "IX_TodoItems_UserId",
                 table: "TodoItems",
-                column: "Username");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_Username",
-                table: "Users",
-                column: "Username",
-                unique: true);
+                column: "UserId");
         }
 
         /// <inheritdoc />

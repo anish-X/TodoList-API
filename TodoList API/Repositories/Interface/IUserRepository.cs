@@ -9,6 +9,7 @@ namespace TodoList_API.Repositories.Interface
         Task<User> CreateAsync(User user);
         Task<User> UpdateByUsernameAsync(string username);
         Task<bool> DeleteByUsernameAsync(string username);
+        Task<List<User>> GetUserTodoAsync();
 
      }     
 }

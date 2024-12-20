@@ -11,20 +11,13 @@ namespace TodoList_API.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.HasKey(x => x.Id); // Primary Key
-                entity.HasIndex(u => u.Username).IsUnique(); // Unique constraint on Username
-                entity.Property(u => u.Username).IsRequired(); // Username is required
-            });
-
-            modelBuilder.Entity<TodoItem>()
-                .HasOne(u => u.User)
-                .WithMany(t => t.TodoItems)
-                .HasForeignKey(p => p.Username)
-                .HasPrincipalKey(x => x.Username)
+       
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.TodoItems)
+                .WithOne(t => t.User)
+                .HasForeignKey(t => t.UserId)
                 .OnDelete(DeleteBehavior.Cascade); //Sdelete todo list if user is deleted
+               
         }
 
 

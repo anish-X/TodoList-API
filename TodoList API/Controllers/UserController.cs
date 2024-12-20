@@ -10,10 +10,11 @@ namespace TodoList_API.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
-
-        public UserController(IUserService userService)
+        private readonly ITodoItemService _todoItemService;
+        public UserController(IUserService userService, ITodoItemService todoItemService)
         {
             _userService = userService;
+            _todoItemService = todoItemService;
         }
 
         [HttpGet]
@@ -25,6 +26,7 @@ namespace TodoList_API.Controllers
         }
 
         [HttpGet("{username}")]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> GetByUsernameAsync(string username)
         {
             var user = await _userService.GetByUsernameAsync(username);
@@ -32,8 +34,6 @@ namespace TodoList_API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "Admin")]
-
         public async Task<IActionResult> CreateUserAsync([FromBody] UserDto userDto)
         {
             
@@ -56,6 +56,7 @@ namespace TodoList_API.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> DeleteUserAsync(string username)
         {
             var user = await _userService.GetByUsernameAsync($"{username}");
@@ -66,6 +67,15 @@ namespace TodoList_API.Controllers
 
             var deleted = await _userService.DeleteUserAsync(username);
             return Ok(deleted);
-         }
+        }
+
+        [HttpGet("users-with-todos")]
+        public async Task<IActionResult> GetUsersWithTodos()
+        {
+            var usersWithTodos = await _userService.GetUserTodoAsync();
+            return Ok(usersWithTodos);
+        }
+
+
     }
 }

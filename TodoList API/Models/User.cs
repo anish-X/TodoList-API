@@ -13,7 +13,7 @@
         public DateTime? CreatedAt{ get; set; }
 
         //navigation property for the todo list
-        public ICollection<TodoItem>? TodoItems { get; set; }   
+        public ICollection<TodoItem> TodoItems { get; set; }   
 
     }
 

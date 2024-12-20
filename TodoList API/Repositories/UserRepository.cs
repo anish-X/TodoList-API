@@ -58,5 +58,13 @@ namespace TodoList_API.Repositories
                 return false;
             }
         }
+
+        public async Task<List<User>> GetUserTodoAsync()
+        {
+            return await _context.Users
+                .Include(u => u.TodoItems)
+                .ToListAsync();
+        }
+
     }
 }
