@@ -48,7 +48,7 @@ Usage
     Login: POST to /api/auth/login to receive a JWT token.
     Access to-do items: Use the JWT token in the Authorization header to access protected endpoints for managing to-do items.
     
-PROJECT LINK: https://github.com/anish-X/TodoList-API
+PROJECT LINK: https://roadmap.sh/projects/todo-list-api
 
 Contributing
 
