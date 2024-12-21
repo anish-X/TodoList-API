@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TodoList_API.DTOs;
+using TodoList_API.Exceptions;
 using TodoList_API.Models;
 using TodoList_API.Repositories.Interface;
 using TodoList_API.Services.Interface;
@@ -18,13 +19,19 @@ namespace TodoList_API.Services
 
         public async Task<IEnumerable<TodoItem>> GetAllTodoItemAsync()
         {
-            return await _repository.GetAllItemAsync();
+            var todos = await _repository.GetAllItemAsync();
+            if (todos == null)
+                throw new NotFoundException("Couldn't retrieve the data");
+            return todos;
         }
 
        
         public async Task<TodoItem> GetTodoItemAsync(int id)
         {
-            return await _repository.GetByIdAsync(id);
+            var todo = await _repository.GetByIdAsync(id);
+            if (todo == null)
+                throw new CustomException("User not found!");
+            return todo;
         }
         public async Task<TodoItem> CreateTodoAsync(TodoItemDto todoItemDto, string userId)
         {
@@ -37,7 +44,8 @@ namespace TodoList_API.Services
                 UserId = int.Parse(userId),
 
             };
-
+            if (user == null)
+                throw new CustomException("Data is not valid");
             return await _repository.CreateTodoAsync(TodoItem);
         }
 
@@ -49,6 +57,10 @@ namespace TodoList_API.Services
             {
                 todo.Title = todoItemDto.Title;
                 todo.Description = todoItemDto.Description;
+            }
+            else
+            {
+                throw new CustomException("Invalid Data");
             }
             return await _repository.UpdateTodoAsync(id);
         }

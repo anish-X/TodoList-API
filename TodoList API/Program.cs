@@ -25,7 +25,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Description = "Enter 'Bearer' [space] and then your valid JWT token."
+        Description = "Enter your valid JWT token."
     });
 
     // Apply the security definition globally

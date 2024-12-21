@@ -1,4 +1,6 @@
-﻿namespace TodoList_API.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TodoList_API.Models
 {
     public class TodoItem
     {

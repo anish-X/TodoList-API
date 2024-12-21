@@ -3,6 +3,7 @@ using TodoList_API.Models;
 using TodoList_API.Repositories.Interface;
 using TodoList_API.DTOs;
 using Org.BouncyCastle.Security;
+using TodoList_API.Exceptions;
 
 namespace TodoList_API.Services
 {
@@ -18,12 +19,18 @@ namespace TodoList_API.Services
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await _userRepository.GetAllAsync();
+            var users = await _userRepository.GetAllAsync();
+            if (users == null)
+                 throw new NotFoundException("Couldn't Fetch User Details");
+            return users;
         }
 
         public async Task<User> GetByUsernameAsync(string username)
         {
-            return await _userRepository.GetByUsernameAsync(username);
+            var user = await _userRepository.GetByUsernameAsync(username);
+            if (user == null)
+                throw new CustomException("User not found!");
+            return user;
         }
 
         public async Task<User> CreateUserAsync(UserDto userDto)
@@ -45,6 +52,9 @@ namespace TodoList_API.Services
                 //    isCompleted = t.IsCompleted
                 //}).ToList() ?? new List<TodoItem>()
             };
+
+            if (user == null)
+                throw new CustomException("Data is not valid");
             return await _userRepository.CreateAsync(user);
 
         }
@@ -59,6 +69,10 @@ namespace TodoList_API.Services
                 existingUser.Email = userDto.Email;
                 existingUser.Role = userDto.Role ?? "User";
                 existingUser.Name = userDto.Name;
+            }
+            else
+            {
+                throw new CustomException($"Invalid Data");
             }
             return await _userRepository.UpdateByUsernameAsync(username);
           
@@ -82,7 +96,8 @@ namespace TodoList_API.Services
         public async Task<List<UserDto>> GetUserTodoAsync()
         {
             var users = await _userRepository.GetUserTodoAsync();
-
+            if (users == null)
+                throw new CustomException("Data is not valid");
             return users.Select(u => new UserDto
             {
                 Name = u.Name,

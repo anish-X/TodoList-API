@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TodoList_API.Data;
+using TodoList_API.Exceptions;
 using TodoList_API.Models;
 using TodoList_API.Repositories.Interface;
 namespace TodoList_API.Repositories
@@ -15,12 +16,18 @@ namespace TodoList_API.Repositories
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await _context.Users.ToListAsync();
+            var user = await _context.Users.ToListAsync();
+            if(user == null) 
+                throw new RepositoryException("Couldn't retrieve data");
+            return user;
         }
 
         public async Task<User?> GetByUsernameAsync(string username)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);   
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            if (user == null)
+                throw new RepositoryException("Couldn't retrieve data");
+            return user;
         }
 
         public async Task<User> CreateAsync(User user)
@@ -50,11 +57,14 @@ namespace TodoList_API.Repositories
         public async Task<bool> DeleteByUsernameAsync(string username)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);   
+
             if (user != null) {
                 _context.Users.Remove(user);
                 await _context.SaveChangesAsync();
                 return true;
             } else {
+                if (user == null)
+                    throw new RepositoryException("Couldn't retrieve data");
                 return false;
             }
         }
